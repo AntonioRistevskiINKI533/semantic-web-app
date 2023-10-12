@@ -9,6 +9,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { CommonHttpRequestInterceptor } from './clients/CommonHttpRequestInterceptor';
+import { API_BASE_URL, Client } from './clients/system-api/UserApiClient.gen';
+import { environment } from './environments/environment';
 
 @NgModule({
   declarations: [
@@ -24,8 +28,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     MatInputModule,
     BrowserAnimationsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    //MatDatepickerModule,
+    [
+      { provide: HTTP_INTERCEPTORS, useClass: CommonHttpRequestInterceptor, multi: true },
+      {
+        provide: API_BASE_URL,
+        useValue: environment.apiUrl
+      },
+    ],
+    //{ provide: MAT_DIALOG_DATA, useValue: {} }
+    Client
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
