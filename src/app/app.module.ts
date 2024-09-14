@@ -13,6 +13,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CommonHttpRequestInterceptor } from './clients/CommonHttpRequestInterceptor';
 import { API_BASE_URL, Client } from './clients/system-api/UserApiClient.gen';
 import { environment } from './environments/environment';
+import { MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { environment } from './environments/environment';
     MatInputModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatTabsModule
   ],
   providers: [
     //MatDatepickerModule,
