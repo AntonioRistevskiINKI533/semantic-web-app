@@ -1,7 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm, FormGroup, FormBuilder } from '@angular/forms';
 import { Rdf, SparqlQueryModel } from './clients/system-api/UserApiClient.gen';
-import { RdfService } from 'src/services/book.service';
+import { RdfService } from 'src/services/rdf.service';
+import { SparqlService } from 'src/services/sparql.service';
+import { GeneratorService } from 'src/services/generator.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -19,17 +22,21 @@ export class AppComponent {
   list: {
       [key: string]: any;
   }[]
-
   
   subject: string
   predicate: string
   obj: string
 
-  numberOfRecords: number
+  numberOfRecords: number = 0;
+  
+  rdf: Rdf
 
   constructor(
     private _formBuilder:FormBuilder,
-    private _rdfService: RdfService
+    private _rdfService: RdfService,
+    private _generatorService: GeneratorService,
+    private _sparqlService: SparqlService,
+    public _dialog: MatDialog
     ) 
     { }
 
@@ -39,19 +46,19 @@ export class AppComponent {
     let request = new SparqlQueryModel();
     request.sparqlQuery = "PREFIX ex: <http://example.org/> SELECT ?subject ?predicate ?object WHERE { ?s ex:subject "+search+" . ?s ex:predicate ?predicate . ?s ex:obj ?obj . }";
 
-    this._rdfService.executeSparqlQuery(request).subscribe((data) => {
+    this._sparqlService.executeSparqlQuery(request).subscribe((data) => {
       this.list = data;
 
       if (this.list.length == 0) {
         request.sparqlQuery = "PREFIX ex: <http://example.org/> SELECT ?subject ?predicate ?object WHERE { ?s ex:subject ?subject . ?s ex:predicate "+search+" . ?s ex:obj ?obj . }";
 
-        this._rdfService.executeSparqlQuery(request).subscribe((data) => {
+        this._sparqlService.executeSparqlQuery(request).subscribe((data) => {
           this.list = data;
     
           if (this.list.length == 0) {
             request.sparqlQuery = "PREFIX ex: <http://example.org/> SELECT ?subject ?predicate ?object WHERE { ?s ex:subject ?subject . ?s ex:predicate ?predicate . ?s ex:obj "+search+" . }";
           
-            this._rdfService.executeSparqlQuery(request).subscribe((data) => {
+            this._sparqlService.executeSparqlQuery(request).subscribe((data) => {
               this.list = data;
             });
           }
@@ -61,9 +68,6 @@ export class AppComponent {
   }
 
   tripleSearchWithSparql() {
-    console.log(this.subject);
-    console.log(this.predicate);
-    console.log(this.obj);
 
     let subject = this.subject == undefined ? "?subject" : "\""+this.subject+"\"";
     let predicate = this.predicate == undefined ? "?predicate" : "\""+this.predicate+"\"";
@@ -74,37 +78,89 @@ export class AppComponent {
 
     console.log(request.sparqlQuery);
 
-    this._rdfService.executeSparqlQuery(request).subscribe((data) => {
+    this._sparqlService.executeSparqlQuery(request).subscribe((data) => {
       this.list = data;
       console.log(request.sparqlQuery);
     });
   }
 
   generate() {
-    this._rdfService.generator(this.numberOfRecords).subscribe((data) => {
+    this._generatorService.generator(this.numberOfRecords).subscribe((data) => {
 
+    });
+  }
+
+  addRdf() {
+    this.rdf.createdAt = new Date();
+    this._rdfService.rdfPOST(this.rdf).subscribe((data) => {
+      this.searchWithSparql();
+      this.tripleSearchWithSparql();
+    });
+  }
+
+  removeRdf() {
+    this._rdfService.rdfDELETE(this.rdf.id!).subscribe((data) => {
+      this.searchWithSparql();
+      this.tripleSearchWithSparql();
+    });
+  }
+
+  retrieveRdf() {
+    this._rdfService.rdfGET(this.rdf.id!).subscribe((data) => {
+      this.rdf.subject = data.subject
+      this.rdf.predicate = data.predicate
+      this.rdf.obj = data.obj
+      this.rdf.createdAt = data.createdAt
+    });
+  }
+
+  updateRdf() {
+    this._rdfService.rdfPUT(this.rdf.id!, this.rdf).subscribe((data) => {
+      this.searchWithSparql();
+      this.tripleSearchWithSparql();
     });
   }
 
   ngOnInit(): void {
     this.searchForm = this._formBuilder.group({
       search: [''],
+
       subject: [''],
       predicate: [''],
       obj: [''],
+
+      numberOfRecords: [''],
+
+      addSubject: [''],
+      addPredicate: [''],
+      addObj: [''],
+
+      updateSubject: [''],
+      updatePredicate: [''],
+      updateObj: [''],
     })
 
-    this._rdfService.getAll().subscribe((data) => {
-      //this.dataSource = new MatTableDataSource<ProductSaleSumsAndProfitViewData>(data.items!);
-      //this.totalItems = data.totalItems!;
-      // this.list = data;
+    this.rdf = new Rdf()
+  }
 
-      //for (var i = 0; i < this.dataSource.data.length; i++) {
-      //  this.chartOptions.series!.push(this.dataSource.data[i].profit as number & { x: any; y: any; fillColor?: string | undefined; strokeColor?: string | undefined; meta?: any; goals?: any; } & [number, number | null] & [number, (number | null)[]]);
-      //  this.chartOptions.labels!.push(this.dataSource.data[i].name);
-      //}
+  openAddDialog(templateRef: TemplateRef<any>): void {
+    this._dialog.open(templateRef, {
+      width: '550px',
+    });
+  }
 
-      //this.chart.render();
+  openUpdateDialog(id: string, templateRef: TemplateRef<any>): void {
+    this.rdf.id = id;
+    this.retrieveRdf();
+    this._dialog.open(templateRef, {
+      width: '550px',
+    });
+  }
+
+  openDeleteDialog(id: string, templateRef: TemplateRef<any>): void {
+    this.rdf.id = id;
+    this._dialog.open(templateRef, {
+      width: '350px',
     });
   }
 }

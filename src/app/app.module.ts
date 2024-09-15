@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MatDialogModule } from '@angular/material/dialog';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +30,8 @@ import { MatTabsModule} from '@angular/material/tabs';
     MatInputModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ],
   providers: [
     //MatDatepickerModule,
