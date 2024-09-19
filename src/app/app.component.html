@@ -11,7 +11,7 @@
 
 <div class="content" role="main">
 
-  <mat-tab-group style="text-align: center; width: 100%;">
+  <mat-tab-group style="text-align: center; width: 100%;" style="text-align: -webkit-center;">
     <mat-tab label="Single sparql search">
       <form  [formGroup]="searchForm" #searchNgForm="ngForm">
   
@@ -25,7 +25,7 @@
       </form>
 
       <button color="primary" mat-raised-button (click)="searchWithSparql()" style="margin-bottom:10px">Search</button>
-      <button mat-raised-button color="primary" (click)="openAddDialog(addTemplate)">Add new</button>
+      <button mat-raised-button color="primary" (click)="openAddDialog(addTemplate)" style="margin-left: 10px;">Add new</button>
 
       <table mat-table dataSource="list" class="mat-elevation-z8">
         <thead>
@@ -76,7 +76,7 @@
       </form>
 
       <button color="primary" mat-raised-button (click)="tripleSearchWithSparql()" style="margin-bottom:10px">Search</button>
-      <button mat-raised-button color="primary" (click)="openAddDialog(addTemplate)">Add new</button>
+      <button mat-raised-button color="primary" (click)="openAddDialog(addTemplate)" style="margin-left: 10px;">Add new</button>
 
       <table mat-table dataSource="list" class="mat-elevation-z8">
         <thead>
@@ -89,10 +89,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of list; index as i">
-            <td><button color="primary" mat-raised-button>{{ item.subject }}</button></td>
-            <td><button color="warn" mat-raised-button>{{ item.predicate }}</button></td>
-            <td><button color="accent" mat-raised-button>{{ item.object }}</button></td>
+            <td><button mat-raised-button>{{ item.subject }}</button></td>
+            <td><button mat-raised-button>{{ item.predicate }}</button></td>
+            <td><button mat-raised-button>{{ item.object }}</button></td>
             <td><button mat-raised-button>{{ item.createdAt | date: 'hh:mm dd/MM/yyyy' }}</button></td>
+            <td><button color="primary" mat-raised-button (click)="openUpdateDialog(item._id, updateTemplate)">Edit</button></td>
+            <td><button color="warn" mat-raised-button (click)="openDeleteDialog(item._id, deleteTemplate)">Delete</button></td>
           </tr>
         </tbody>
       </table>
@@ -201,7 +203,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions>
-      <button color="primary" mat-raised-button mat-dialog-close (click)="removeRdf()">Delete</button>
+      <button color="warn" mat-raised-button mat-dialog-close (click)="removeRdf()">Delete</button>
       <button color="primary" mat-raised-button mat-dialog-close>Close</button>
     </mat-dialog-actions>
 

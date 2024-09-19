@@ -5,6 +5,7 @@ import { RdfService } from 'src/services/rdf.service';
 import { SparqlService } from 'src/services/sparql.service';
 import { GeneratorService } from 'src/services/generator.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent {
     private _rdfService: RdfService,
     private _generatorService: GeneratorService,
     private _sparqlService: SparqlService,
-    public _dialog: MatDialog
+    public _dialog: MatDialog,
+    private _snackBar: MatSnackBar
     ) 
     { }
 
@@ -95,6 +97,10 @@ export class AppComponent {
     this._rdfService.rdfPOST(this.rdf).subscribe((data) => {
       this.searchWithSparql();
       this.tripleSearchWithSparql();
+
+      this._snackBar.open("Success", 'Close', {
+        duration: 5000
+      });
     });
   }
 
@@ -102,6 +108,10 @@ export class AppComponent {
     this._rdfService.rdfDELETE(this.rdf.id!).subscribe((data) => {
       this.searchWithSparql();
       this.tripleSearchWithSparql();
+
+      this._snackBar.open("Success", 'Close', {
+        duration: 5000
+      });
     });
   }
 
@@ -118,6 +128,10 @@ export class AppComponent {
     this._rdfService.rdfPUT(this.rdf.id!, this.rdf).subscribe((data) => {
       this.searchWithSparql();
       this.tripleSearchWithSparql();
+
+      this._snackBar.open("Success", 'Close', {
+        duration: 5000
+      });
     });
   }
 
@@ -140,10 +154,14 @@ export class AppComponent {
       updateObj: [''],
     })
 
-    this.rdf = new Rdf()
+    this.rdf = new Rdf();
+
+    this.searchWithSparql();
+    this.tripleSearchWithSparql();
   }
 
   openAddDialog(templateRef: TemplateRef<any>): void {
+    this.rdf = new Rdf();
     this._dialog.open(templateRef, {
       width: '550px',
     });

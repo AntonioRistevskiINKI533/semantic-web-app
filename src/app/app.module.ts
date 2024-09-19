@@ -14,6 +14,7 @@ import { CommonHttpRequestInterceptor } from './clients/CommonHttpRequestInterce
 import { API_BASE_URL, Client } from './clients/system-api/UserApiClient.gen';
 import { environment } from './environments/environment';
 import { MatTabsModule} from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { MatTabsModule} from '@angular/material/tabs';
     BrowserAnimationsModule,
     HttpClientModule,
     MatTabsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [
     //MatDatepickerModule,
