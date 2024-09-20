@@ -88,7 +88,10 @@ export class AppComponent {
 
   generate() {
     this._generatorService.generator(this.numberOfRecords).subscribe((data) => {
-
+      
+      this._snackBar.open("Success", 'Close', {
+        duration: 5000
+      });
     });
   }
 

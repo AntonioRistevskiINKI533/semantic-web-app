@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "https://localhost:7283/swagger/v1/swagger.json",
+      "url": "http://semanticwebapi-dev.eba-ndy8ps9y.us-east-1.elasticbeanstalk.com/swagger/v1/swagger.json",
       "output": null,
       "newLineBehavior": "Auto"
     }

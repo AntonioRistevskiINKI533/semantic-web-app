@@ -2,15 +2,14 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-const ApiUrl = "https://localhost:7283";
+//const ApiUrl = "https://localhost:7283";
+const ApiUrl = "http://semanticwebapi-dev.eba-ndy8ps9y.us-east-1.elasticbeanstalk.com"
 const ServerDomain ="https://localhost:7283";
-const UsersDomain="https://localhost:7283/education"
 export const base = "/"
 export const environment = {
   production: false,
   apiUrl: ApiUrl,
   serverDomain: ServerDomain,
-  userDomain: UsersDomain,
   base: base
 };
 
