@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CommonHttpRequestInterceptor } from './clients/CommonHttpRequestInterceptor';
 import { API_BASE_URL, Client } from './clients/system-api/UserApiClient.gen';
-import { environment } from './environments/environment';
+import { environment } from '../environments/environment';
 import { MatTabsModule} from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
